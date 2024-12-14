@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Tổng quan</title>
+	<meta content="" name="description">
+	<meta content="" name="keywords">
+	<div th:replace="admin/fragments/head :: head"></div>
+</head>
+
+<body>
+	<!-- ======= Header ======= -->
+	<header th:replace="admin/fragments/header :: header">
+	</header>
+
+	<!-- ======= Sidebar ======= -->
+	<aside id="sidebar" class="sidebar">
+
+		<ul class="sidebar-nav" id="sidebar-nav">
+
+			<li class="nav-item">
+				<a class="nav-link " th:href="@{/admin}">
+					<i class="bi bi-grid"></i>
+					<span>Tổng quan</span>
+				</a>
+			</li> <!-- End Dashboard Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-people"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="user-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/users_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+				</ul>
+			</li><!-- End Users Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-journal-medical"></i><span>Danh mục</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/categories_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/admin/categories_management/add}">
+							<i class="bi bi-person-plus-fill"></i><span>Thêm mới</span>
+						</a>
+					</li>
+				</ul>
+			</li><!-- End Categorys Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-journal-bookmark"></i><span>Sản phẩm</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="product-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/books_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/admin/books_management/add}">
+							<i class="bi bi-person-plus-fill"></i><span>Thêm mới</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#oder-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-basket2"></i><span>Đơn hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="oder-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/orders_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link collapsed" th:href="@{/admin/contacts}">
+					<i class="bi bi-chat-left-text"></i>
+					<span>Liên hệ</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link collapsed" th:href="@{/logout}">
+					<i class="bi bi-box-arrow-in-right"></i>
+					<span>Đăng xuất</span>
+				</a>
+			</li>
+		</ul>
+	</aside>
+
+	<!-- ======= Main ======= -->
+	<main id="main" class="main">
+
+		<div class="pagetitle d-flex">
+			<h1>Tổng quan</h1>
+			<nav class="ms-auto">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/admin}"><i class="bi bi-house"></i></a></li>
+					<li class="breadcrumb-item active">Tổng quan</li>
+				</ol>
+			</nav>
+		</div><!-- End Page Title -->
+
+		<div th:if="${message}" class="alert alert-success" role="alert">
+			<p th:text="${message}"></p>
+		</div>
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+			<p th:text="${error}"></p>
+		</div>
+
+		<section class="section dashboard">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="row">
+
+						<!-- Sales Card -->
+						<div class="col-xxl-3 col-md-6">
+							<div class="card info-card sales-card">
+								<div class="card-body">
+									<h5 class="card-title">Tổng đơn hàng</h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-basket2"></i>
+										</div>
+										<div class="ps-3">
+											<h6
+												th:text="${#numbers.formatDecimal(__${(numberOfOrders)}__, 0, 'POINT', 0, 'POINT')}">
+											</h6>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div><!-- End Sales Card -->
+
+						<!-- Revenue Card -->
+						<div class="col-xxl-3 col-md-6">
+							<div class="card info-card revenue-card">
+								<div class="card-body">
+									<h5 class="card-title">Tổng doanh thu</h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-currency-dollar"></i>
+										</div>
+										<div class="ps-3">
+											<h6
+												th:text="${#numbers.formatDecimal(__${(totalRevenue)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+											</h6>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div><!-- End Revenue Card -->
+
+						<!-- Customers Card -->
+						<div class="col-xxl-3 col-xl-12">
+
+							<div class="card info-card customers-card">
+								<div class="card-body">
+									<h5 class="card-title">Số người dùng</h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-people"></i>
+										</div>
+										<div class="ps-3">
+											<h6
+												th:text="${#numbers.formatDecimal(__${(numberOfUsers)}__, 0, 'POINT', 0, 'POINT')}">
+											</h6>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div><!-- End Customers Card -->
+
+						<!-- Products Card -->
+						<div class="col-xxl-3 col-xl-12">
+
+							<div class="card info-card products-card">
+								<div class="card-body">
+									<h5 class="card-title">Số sản phẩm</h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-journal-bookmark"></i>
+										</div>
+										<div class="ps-3">
+											<h6
+												th:text="${#numbers.formatDecimal(__${(numberOfBooks)}__, 0, 'POINT', 0, 'POINT')}">
+											</h6>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div><!-- End Products Card -->
+
+						<!-- Reports -->
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">Thống kê</h5>
+									<div id="reportsChart"></div>
+									<script th:inline="javascript">
+										let dates = /*[[${dates}]]*/[];
+										let totalOrders = /*[[${totalOrders}]]*/[];
+										let totalRevenues = /*[[${totalRevenues}]]*/[];
+
+										document.addEventListener("DOMContentLoaded", () => {
+											new ApexCharts(document.querySelector("#reportsChart"), {
+												series: [
+													{
+														name: 'Doanh thu (VND)',
+														data: totalRevenues,
+														type: 'line'
+													},
+													{
+														name: 'Số đơn hàng',
+														data: totalOrders,
+														type: 'bar'
+													}
+												],
+												chart: {
+													height: 350,
+													type: 'line',
+													stacked: false
+												},
+												stroke: {
+													width: [5, 0],
+													curve: 'smooth'
+												},
+												plotOptions: {
+													bar: {
+														columnWidth: '20%'
+													}
+												},
+												xaxis: {
+													categories: dates,
+												},
+												yaxis: [
+													{
+														title: {
+															text: 'Doanh thu (VND)',
+															style: {
+																color: '#008FFB'
+															}
+														},
+														labels: {
+															formatter: function (val) {
+																return val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+															}
+														},
+														min: 0
+													},
+													{
+														opposite: true,
+														title: {
+															text: 'Số đơn hàng',
+															style: {
+																color: '#FEB019'
+															}
+														},
+														min: 0
+													}
+												],
+												tooltip: {
+													shared: true,
+													intersect: false,
+													y: [
+														{
+															formatter: function (val) {
+																return val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+															}
+														},
+														{
+															formatter: function (val) {
+																return val + " đơn";
+															}
+														}
+													]
+												},
+												colors: ['#008FFB', '#FEB019'],
+												legend: {
+													position: 'top',
+													horizontalAlign: 'left'
+												}
+											}).render();
+										});
+									</script>
+									<!-- End Line Chart -->
+								</div>
+							</div>
+						</div><!-- End Reports -->
+
+						<!-- Recent Oders -->
+						<div class="col-12">
+							<div class="card recent-sales overflow-auto">
+								<div class="card-body">
+									<h5 class="card-title">Đơn hàng gần đây</h5>
+
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<th scope="col">#ID</th>
+												<th scope="col">Khách hàng</th>
+												<th scope="col">Ngày tạo</th>
+												<th scope="col">Giá trị</th>
+												<th scope="col">Trạng thái</th>
+												<th scope="col">Hành động</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="order : ${orders}">
+												<td th:text="'#'+${order.id}"></td>
+												<td th:text="${order.reciever}"></td>
+												<td th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">
+												</td>
+												<td
+													th:text="${#numbers.formatDecimal(__${(order.totalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</td>
+												<td th:if="${order.status == 'PENDING'}">
+													<span class="badge bg-danger">Đang chờ xử lý</span>
+												</td>
+												<td th:if="${order.status == 'PROCESSING'}">
+													<span class="badge bg-primary">Đang xử lý</span>
+												</td>
+												<td th:if="${order.status == 'DELIVERING'}">
+													<span class="badge bg-warning">Đang giao hàng</span>
+												</td>
+												<td th:if="${order.status == 'DELIVERED'}">
+													<span class="badge bg-success">Đã giao thành công</span>
+												</td>
+												<td th:if="${order.status == 'CANCELLED'}">
+													<span class="badge bg-secondary">Đã hủy</span>
+												</td>
+												<td style="width: 12rem">
+													<a th:href="@{/admin/orders_management/details/__${order.id}__}"><button
+															type="button" class="btn btn-outline-info">Chi
+															tiết</button></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+
+							</div>
+						</div><!-- End Recent Oders -->
+
+						<!-- Top Selling -->
+						<div class="col-12">
+							<div class="card top-selling overflow-auto">
+								<div class="card-body pb-0">
+									<h5 class="card-title">Sách bán chạy</h5>
+
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<th scope="col">#ID</th>
+												<th scope="col">Ảnh bìa</th>
+												<th scope="col">Tên sách</th>
+												<th scope="col">Giá bán</th>
+												<th scope="col">Đã bán</th>
+												<th scope="col">Doanh thu</th>
+												<th scope="col">Hành động</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="book : ${books}">
+												<td th:text="'#'+${book.id}"></td>
+												<td class="text-center"><img
+														th:src="@{/cover_images/__${book.coverImage}__}"
+														style="max-height: 150px;"></td>
+												<td th:text="${book.title}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(__${(book.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</td>
+												<td th:text="${book.buyCount}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(__${(book.salePrice)*(book.buyCount)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</td>
+												<td style="width: 12rem">
+													<a th:href="@{/admin/books_management/edit/__${book.id}__}"><button
+															type="button" class="btn btn-outline-info">Chi
+															tiết</button></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div><!-- End Top Selling -->
+					</div>
+				</div><!-- End Left side columns -->
+			</div>
+		</section>
+	</main>
+
+	<footer th:replace="admin/fragments/footer :: footer"></footer>
+	<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+			class="bi bi-arrow-up-short"></i></a>
+
+	<!-- Vendor JS Files -->
+	<script th:src="@{/vendor/apexcharts/apexcharts.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/vendor/chart.js/chart.umd.js}"></script>
+	<script th:src="@{/vendor/echarts/echarts.min.js}"></script>
+	<script th:src="@{/vendor/quill/quill.js}"></script>
+	<script th:src="@{/vendor/simple-datatables/simple-datatables.js}"></script>
+	<script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+	<script th:src="@{/vendor/php-email-form/validate.js}"></script>
+
+	<!-- Template Main JS File -->
+	<script th:src="@{/js/admin/main.js}"></script>
+</body>
+
+</html>

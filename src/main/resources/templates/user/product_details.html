@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Sản phẩm</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+	<style>
+		.ft__logo a img {
+			max-width: 20%;
+		}
+
+		.img-container {
+			width: 350px;
+			height: 500px;
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+		}
+
+		.product-details-img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.modal-body img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 10px;
+		}
+
+		.prod {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.product_img {
+			height: 300px;
+			overflow: hidden;
+			display: block;
+		}
+
+		.product_img img {
+			height: 100%;
+			width: auto !important;
+			display: block;
+			margin: 0 auto;
+		}
+
+		.title-container {
+			height: 30px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+
+		<!-- Start Bradcaump area -->
+		<div class="ht__bradcaump__area bg-image--3">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="bradcaump__inner text-center">
+							<h2 class="bradcaump-title">Sản phẩm</h2>
+							<nav class="bradcaump-content">
+								<a class="breadcrumb_item" th:href="@{/}">Trang chủ</a>
+								<span class="brd-separetor">/</span>
+								<a class="breadcrumb_item" th:href="@{/shop}">Sản phẩm</a>
+								<span class="brd-separetor">/</span>
+								<span class="breadcrumb_item active" th:each="category : ${product.category}">
+									<span th:text="${category.getDescription()}"></span>
+								</span>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Bradcaump area -->
+		<!-- Start main Content -->
+		<div class="maincontent bg--white pt--30 pb--30">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-12">
+						<div class="wn__single__product">
+							<div class="row">
+								<!-- Hình ảnh hiển thị -->
+								<div class="col-lg-4 col-12">
+									<div class="wn__fotorama__wrapper img-container" data-bs-toggle="modal"
+										data-bs-target="#imageModal">
+										<img class="product-details-img rounded"
+											th:src="@{/cover_images/__${product.coverImage}__}" alt="Product Image" />
+									</div>
+								</div>
+
+								<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+									aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-body">
+												<img class="w-100" th:src="@{/cover_images/__${product.coverImage}__}"
+													alt="Product Image">
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-8 col-12">
+									<div class="product__info__main">
+										<h1 th:text="${product.title}"></h1>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="d-flex align-items-center p-2">
+													<span class="me-2">Tác giả:</span>
+													<strong th:text="${product.author}"></strong>
+												</div>
+												<div class="d-flex align-items-center p-2">
+													<span class="me-2">Hình thức:</span>
+													<strong th:text="${product.layout}"></strong>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="d-flex align-items-center p-2">
+													<span class="me-2">Nhà cung cấp:</span>
+													<strong th:text="${product.supplier}"></strong>
+												</div>
+												<div class="d-flex align-items-center p-2">
+													<span class="me-2">Nhà xuất bản:</span>
+													<strong th:text="${product.publisher}"></strong>
+												</div>
+											</div>
+										</div>
+										<div class="meta d-flex align-items-center p-2">
+											<div class="d-flex align-items-center">
+												<span class="text-black-50">Đã bán:</span>
+												<span class="text-black" th:text="${product.buyCount}"></span>
+											</div>
+											<span class="px-3 text-black-50">|</span>
+											<div class="d-flex align-items-center">
+												<span class="text-black-50">Còn lại:</span>
+												<span class="text-black" th:text="${product.qty}"></span>
+											</div>
+										</div>
+										<div class="d-flex align-items-center">
+											<div class="d-flex align-items-center">
+												<h3
+													th:text="${#numbers.formatDecimal(__${(product.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</h3>
+											</div>
+											<span class="px-2 text-black-50">/</span>
+											<div class="d-flex align-items-center">
+												<span class="text-black-50 text-decoration-line-through"
+													th:text="${#numbers.formatDecimal(__${(product.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</span>
+											</div>
+										</div>
+										<div class="col-12 box-tocart d-flex align-items-center mt-5">
+											<span me-3>Số lượng</span>
+											<input id="qty" class="input-text qty form-control me-3" name="qty" min="1"
+												max="999" value="1" title="Qty" type="number" />
+											<button class="btn btn-outline-danger me-3"
+												th:onclick="'addToCart(' + ${product.id} + ', ' + ${product.qty} + ')'"
+												th:text="'Thêm giỏ hàng'">
+											</button>
+											<button class="btn btn-danger me-3"
+												th:onclick="'buyNow(' + ${product.id} + ', ' + ${product.qty} + ')'"
+												th:text="'Mua ngay'">
+											</button>
+											<button class="btn btn-secondary me-3"
+												th:onclick="'addToWishlist(' + ${product.id} + ')'"
+												th:text="'Thêm yêu thích'">
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="product__info__detailed">
+						<div class="pro_details_nav nav justify-content-start">
+							<button class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-details">
+								Thông tin chi tiết
+							</button>
+							<button class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-describes">
+								Mô tả sản phẩm
+							</button>
+						</div>
+
+						<div class="tab-content">
+							<div class="pro__tab_label tab-pane fade show active" id="nav-details">
+								<table class="table table-bordered">
+									<tr>
+										<th>ID</th>
+										<td th:text="${'#'+ product.id }"></td>
+									</tr>
+
+									<tr>
+										<th>Tác giả</th>
+										<td th:text="${product.author }"></td>
+									</tr>
+
+									<tr>
+										<th>Nhà cung cấp</th>
+										<td th:text="${product.supplier }"></td>
+									</tr>
+
+									<tr>
+										<th>Nhà xuất bản</th>
+										<td th:text="${product.publisher }"></td>
+									</tr>
+
+									<tr>
+										<th>Năm xuất bản</th>
+										<td th:text="${product.publishedDate }"></td>
+									</tr>
+
+									<tr>
+										<th>Số trang</th>
+										<td th:text="${product.numberOfPages }"></td>
+									</tr>
+
+									<tr>
+										<th>Trọng lượng(gr)</th>
+										<td th:text="${product.weight }"></td>
+									</tr>
+
+									<tr>
+										<th>Hình thức</th>
+										<td th:text="${product.layout }"></td>
+									</tr>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="nav-describes">
+								<textarea rows="15"  class="form-control" th:text="${product.description}" readonly></textarea>
+							</div>
+						</div>
+					</div>
+					<section class="wn__bestseller__area bg--white pt--50 pb--30">
+						<div class="container">
+							<div class="row">
+								<div class="col-lg-12 badge text-bg-secondary p-3">
+									<h3>Sản phẩm liên quan</h3>
+								</div>
+							</div>
+							<div class="tab__container">
+								<!-- Start Single Tab Content -->
+								<div class="row single__tab tab-pane fade show active" id="nav-all" role="tabpanel">
+									<div class="product__indicator--4 arrows_style owl-carousel owl-theme">
+										<div th:each="book : ${books}" class="mt--20 p-3 prod product__style--3 col-12">
+											<a class="product_img" th:href="@{/shop/product/__${book.id}__}">
+												<img class="aspect-ratio-box__img img-fluid"
+													th:src="@{/cover_images/__${book.coverImage}__}"
+													alt="product image" />
+											</a>
+											<p class="title-container">
+												<a th:href="@{/shop/product/__${book.id}__}"
+													th:text="${book.title}"></a>
+											</p>
+											<div class="meta d-flex align-items-center">
+												<div class="d-flex align-items-center">
+													<h4
+														th:text="${#numbers.formatDecimal(__${(book.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+													</h4>
+												</div>
+												<span class="text-black-50">/</span>
+												<div class="d-flex align-items-center">
+													<span class="text-black-50 text-decoration-line-through"
+														th:text="${#numbers.formatDecimal(__${(book.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'"></span>
+												</div>
+											</div>
+											<!-- Add to cart button -->
+											<div class="product__hover__info">
+												<button href="cart.html" class="btn btn-outline-danger block"
+													th:onclick="'addToCart(' + ${book.id} + ')'"
+													th:text="'Thêm giỏ hàng'"></button>
+											</div>
+
+										</div>
+										<!-- End Single Product -->
+									</div>
+								</div>
+								<!-- End Single Tab Content -->
+							</div>
+
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		document.querySelector('.img-container').addEventListener('click', () => {
+			const modalImage = document.querySelector('#imageModal img');
+			const src = document.querySelector('.product-details-img').getAttribute('src');
+			modalImage.setAttribute('src', src);
+		});
+
+		function addToWishlist(productId) {
+
+			$.ajax({
+				type: "POST",
+				url: "/wishlist/add",
+				data: {
+					bookId: productId
+				},
+				success: function (response) {
+					if (response === "ok") {
+						alert("Đã thêm vào danh sách yêu thích !")
+						window.location.reload();
+					} else {
+						alert("Bạn cần đăng nhập trước");
+						window.location.href = "/login";
+					}
+				},
+				error: function (xhr, status, error) {
+
+					alert("Đã có lỗi : " + error);
+				}
+			});
+		}
+
+		function addToCart(productId, productQty) {
+			var qty = $('#qty').val()
+			if (productQty < qty) {
+				alert("Số lượng chỉ còn lại: " + productQty);
+			} else {
+				sendAddToCartRequest(productId, qty);
+			}
+		}
+
+		function sendAddToCartRequest(productId, qty) {
+			var data = JSON.stringify({ "productId": productId, "quantity": qty });
+
+			$.ajax({
+				type: "POST",
+				url: "/cart/add-to-cart",
+				contentType: "application/json",
+				data: data,
+				success: function (response) {
+					if (response === "ok") {
+						alert("Thêm sản phẩm vào giỏ hàng thành công.");
+						updateCartQuantity();
+					} else {
+						alert("Bạn cần đăng nhập trước");
+						window.location.href = "/login";
+					}
+				},
+				error: function () {
+					alert("Đã xảy ra lỗi khi thêm sản phẩm vào giỏ.");
+				}
+			});
+		}
+
+		function updateCartQuantity() {
+			$.ajax({
+				type: "GET",
+				url: "/cart/cart-item-count",
+				success: function (data) {
+					$("#cart-quantity").text(data);
+				},
+				error: function () {
+					console.log("Lỗi khi cập nhật số lượng giỏ hàng.");
+				}
+			});
+		}
+
+		function buyNow(productId, productQty) {
+			var qty = $('#qty').val()
+			if (productQty < qty) {
+				alert("Số lượng chỉ còn lại: " + productQty);
+			} else {
+				sendbuyNow(productId, qty);
+			}
+		}
+
+		function sendbuyNow(productId, qty) {
+			var data = JSON.stringify({ "productId": productId, "quantity": qty });
+
+			$.ajax({
+				type: "POST",
+				url: "/cart/add-to-cart",
+				contentType: "application/json",
+				data: data,
+				success: function (response) {
+					if (response === "ok") {
+						window.location.href = "/cart";
+					} else {
+						alert("Bạn cần đăng nhập trước");
+						window.location.href = "/login";
+					}
+				},
+				error: function () {
+					alert("Đã xảy ra lỗi khi thêm sản phẩm vào giỏ.");
+				}
+			});
+		}
+
+	</script>
+	<!-- End main Content -->
+	<!-- Footer Area -->
+	<footer th:replace="user/fragments/footer :: footer"></footer>
+	<!-- //Footer Area -->
+	</div>
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<!-- Vendor JS Files -->
+
+</body>
+
+</html>

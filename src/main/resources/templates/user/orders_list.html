@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Rook Book Store</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+
+	<style>
+
+		.wishlist-table table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.wishlist-table th,
+		.wishlist-table td {
+			text-align: left;
+			padding: 15px;
+			border-bottom: 1px solid #f0f0f0;
+		}
+
+		.wishlist-table th {
+			background-color: #f8f8f8;
+			font-weight: 600;
+			font-size: 16px;
+			text-transform: uppercase;
+		}
+
+		.order-details a {
+			color: #007bff;
+			text-decoration: none;
+		}
+
+		/* Style for order status cells */
+		.order-status {
+			text-align: center;
+			font-weight: bold;
+			text-transform: capitalize;
+		}
+
+		/* Style for the "delevering" status */
+		.order-status.delivering {
+			color: #007bff;
+		}
+
+		/* Style for the "Processing" status */
+		.order-status.processing {
+			color: #ffc107;
+		}
+
+		/* Style for the "Cancelled" status */
+		.order-status.cancelled {
+			color: #dc3545;
+		}
+
+		/* Style for the "Completed" status */
+		.order-status.completed {
+			color: #28a745;
+		}
+
+		.ft__logo a img {
+			max-width: 20%;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+		<!-- Start Bradcaump area -->
+		<div class="ht__bradcaump__area bg-image--3">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="bradcaump__inner text-center">
+							<h2 class="bradcaump-title">Đơn hàng</h2>
+							<nav class="bradcaump-content">
+								<a class="breadcrumb_item" th:href="@{/}">Trang chủ</a>
+								<span class="brd-separetor">/</span>
+								<span class="breadcrumb_item active">Đơn hàng</span>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Bradcaump area -->
+		<!-- orders-list-main-area start -->
+		<div class="wishlist-area section-padding--lg bg__white">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="wishlist-content">
+							<form action="#">
+								<div class="wishlist-table wnro__table table-responsive">
+									<table>
+										<thead>
+											<tr>
+												<th class="order-id">
+													<span class="nobr">ID</span>
+												</th>
+												<th class="order-date">
+													<span class="nobr">Ngày đặt đơn</span>
+												</th>
+												<th class="order-amount">
+													<span class="nobr">Tổng giá trị</span>
+												</th>
+												<th class="order-status">
+													<span class="nobr">Trạng thái</span>
+												</th>
+												<th class="order-details"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="order : ${orders}">
+												<td class="order-id" th:text="'#' + ${order.id}"></td>
+												<td class="order-date"
+													th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">
+												</td>
+
+												<td class="order-amount"
+													th:text="${#numbers.formatDecimal(__${(order.totalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'"
+												></td>
+												<td th:if="${order.status == 'PENDING'}">
+													<span class="order-status text-danger">Đang chờ xử lý</span>
+												</td>
+												<td th:if="${order.status == 'PROCESSING'}">
+													<span class="order-status text-primary">Đang xử lý</span>
+												</td>
+												<td th:if="${order.status == 'DELIVERING'}">
+													<span class="order-status text-warning">Đang giao hàng</span>
+												</td>
+												<td th:if="${order.status == 'DELIVERED'}">
+													<span class="order-status text-success">Đã giao thành công</span>
+												</td>
+												<td th:if="${order.status == 'CANCELLED'}">
+													<span class="order-status text-secondary">Đã hủy</span>
+												</td>
+												<td class="order-details">
+													<a th:href="@{orders/__${order.id}__}">Chi tiết</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- orders-list-main-area end -->
+		<!-- Footer Area -->
+		<footer th:replace="user/fragments/footer :: footer"></footer>
+		<!-- //Footer Area -->
+	</div>
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+</body>
+
+</html>

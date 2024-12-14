@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Liên hệ</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+
+	<style>
+		.ft__logo a img {
+			max-width: 20%;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+		<!-- Start Bradcaump area -->
+		<div class="ht__bradcaump__area bg-image--3">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="bradcaump__inner text-center">
+							<h2 class="bradcaump-title">Liên hệ</h2>
+							<nav class="bradcaump-content">
+								<a class="breadcrumb_item" th:href="@{/}">Trang chủ</a>
+								<span class="brd-separetor">/</span>
+								<span class="breadcrumb_item active">Liên hệ</span>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Bradcaump area -->
+
+		<!-- Start Contact Area -->
+		<section class="wn_contact_area bg--white pt--50 pb--50">
+			<div class="container">
+				<div class="row">
+					<div th:if="${param.success}" class="alert alert-success" th:text="${thankForContacting}"
+						role="alert">
+					</div>
+				</div>
+				<div class="row mt--20">
+					<div class="col-lg-6">
+						<div class="row gy-4">
+							<div class="col-md-5 bg__cat--8 m-3">
+								<div class="info-item">
+									<div class="text-center">
+										<i class="bi bi-geo-alt"></i>
+										<h3>Địa chỉ</h3>
+									</div>
+									<div class=" m-4 title-container">
+										<p>60-62 Lê Lợi, Quận 1, TP.HCM</p>
+									</div>
+								</div>
+							</div><!-- End Info Item -->
+
+							<div class="col-md-5 bg__cat--8 m-3">
+								<div class="info-item">
+									<div class="text-center">
+										<i class="bi bi-telephone"></i>
+										<h3>Số điện thoại</h3>
+									</div>
+									<div class=" m-4 title-container">
+										<p>1900636467</p>
+									</div>
+								</div>
+							</div><!-- End Info Item -->
+
+							<div class="col-md-5 bg__cat--8 m-3">
+								<div class="info-item">
+									<div class="text-center">
+										<i class="bi bi-envelope"></i>
+										<h3>Email</h3>
+									</div>
+									<div class=" m-4 title-container">
+										<p>rooks.bookstore@gmail.com</p>
+									</div>
+								</div>
+							</div><!-- End Info Item -->
+
+							<div class="col-md-5 bg__cat--8 m-3">
+								<div class="info-item">
+									<div class="text-center">
+										<i class="bi bi-clock"></i>
+										<h3>Thời gian</h3>
+									</div>
+									<div class=" m-4 title-container">
+										<p>Thứ 2 - Thứ 6</p>
+										<p>9:00AM - 05:00PM</p>
+									</div>
+								</div>
+							</div><!-- End Info Item -->
+
+						</div>
+
+					</div>
+
+					<div class="col-lg-6">
+						<form th:action="@{/contact/submit}" method="post" th:object="${contact}">
+							<div class="row gy-4">
+
+								<div class="col-md-6">
+									<input type="text" name="name" class="form-control" th:field="*{name}"
+										placeholder="Họ và tên" required="">
+								</div>
+
+								<div class="col-md-6 ">
+									<input type="email" class="form-control" name="email" th:field="*{email}"
+										placeholder="Email" required="">
+								</div>
+
+								<div class="col-12">
+									<input type="text" class="form-control" name="subject" th:field="*{subject}"
+										placeholder="Tiêu đề" required="">
+								</div>
+
+								<div class="col-12">
+									<textarea class="form-control" name="message" rows="6" th:field="*{message}"
+										placeholder="Lời nhắn" required=""></textarea>
+								</div>
+
+								<div class="col-12 text-center">
+									<button class="btn btn-dark" type="submit">Gửi</button>
+								</div>
+							</div>
+						</form>
+					</div><!-- End Contact Form -->
+				</div>
+			</div>
+		</section><!-- /Contact Section -->
+	</div>
+	</section>
+	<!-- End Contact Area -->
+	<!-- Footer Area -->
+	<footer th:replace="user/fragments/footer :: footer"></footer>
+	<!-- //Footer Area -->
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+</body>
+
+</html>

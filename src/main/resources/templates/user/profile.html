@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Thông tin tài khoản</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div th:replace="user/fragments/head :: head"></div>
+    <style>
+        .ft__logo a img {
+            max-width: 20%;
+        }
+
+        .imagePreview {
+            height: 300px;
+            overflow: hidden;
+            display: block;
+        }
+
+        .imagePreview img {
+            height: 100%;
+            width: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper" id="wrapper">
+        <!-- Header -->
+        <header th:replace="user/fragments/header :: header"></header>
+        <!-- Breadcrumb -->
+        <div class="ht__bradcaump__area bg-image--3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="bradcaump__inner text-center">
+                            <h2 class="bradcaump-title">Thông tin tài khoản</h2>
+                            <nav class="bradcaump-content">
+                                <a class="breadcrumb_item" th:href="@{/}">Trang chủ</a>
+                                <span class="brd-separetor">/</span>
+                                <span class="breadcrumb_item active">Tài khoản</span>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="maincontent bg--white pt--30 pb--30">
+            <div class="container">
+                <div class="row">
+                    <div th:if="${message}" class="alert alert-success" role="alert">
+                        <span th:text="${message}"></span>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger" role="alert">
+                        <span th:text="${error}"></span>
+                    </div>
+                    <div class="product__info__detailed">
+                        <div class="pro_details_nav nav justify-content-start">
+                            <button class="nav-item nav-link active" data-bs-toggle="tab"
+                                data-bs-target="#profile-edit">
+                                Thông tin tài khoản
+                            </button>
+                            <button class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#change-password">
+                                Đổi mật khẩu
+                            </button>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- Profile Edit -->
+                            <div class="tab-pane fade show active pt-3" id="profile-edit">
+                                <form method="post" th:action="@{/profile/update}" th:object="${user}"
+                                    enctype="multipart/form-data">
+                                    <div class="row">
+                                        <div class="col-md-8 pe-5">
+                                            <div class="row mb-3">
+                                                <label for="fullName"
+                                                    class="col-md-3 col-lg-2 col-form-label">ID</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <input name="fullName" type="text" class="form-control"
+                                                        id="fullName" th:field="*{id}" readonly>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label for="fullName" class="col-md-3 col-lg-2 col-form-label">Họ và
+                                                    tên</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <input name="fullName" type="text" class="form-control"
+                                                        id="fullName" th:field="*{fullName}"
+                                                        placeholder="Nhập họ và tên">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label for="email"
+                                                    class="col-md-3 col-lg-2 col-form-label">Email</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <input name="email" type="text" class="form-control" id="email"
+                                                        th:field="*{email}" placeholder="Nhập email">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label for="numberPhone" class="col-md-3 col-lg-2 col-form-label">Số
+                                                    điện thoại</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <input name="numberPhone" type="number" class="form-control"
+                                                        id="numberPhone" th:field="*{phoneNumber}"
+                                                        placeholder="Nhập số điện thoại">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <legend class="col-md-3 col-lg-2 col-form-label">Giới tính</legend>
+                                                <div class="col-md-5 col-lg-10 d-flex">
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" id="genderMale"
+                                                            name="gender" value="Nam" th:checked="*{gender == 'Nam'}">
+                                                        <label class="form-check-label" for="genderMale">Nam</label>
+                                                    </div>
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" id="genderFemale"
+                                                            name="gender" value="Nữ" th:checked="*{gender == 'Nữ'}">
+                                                        <label class="form-check-label" for="genderFemale">Nữ</label>
+                                                    </div>
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" id="genderOther"
+                                                            name="gender" value="Khác" th:checked="*{gender == 'Khác'}">
+                                                        <label class="form-check-label" for="genderOther">Khác</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label for="inputDate" class="col-md-3 col-lg-2 col-form-label">Ngày
+                                                    sinh</label>
+                                                <div class="col-md-5 col-lg-10 ">
+                                                    <input type="date" class="form-control" id="inputDate"
+                                                        th:field="*{birthday}">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="Address"
+                                                    class="col-md-3 col-lg-2 col-form-label">Address</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <input name="address" type="text" class="form-control" id="Address"
+                                                        th:field="*{address}" placeholder="Nhập địa chỉ">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="inputText" class="col-md-3 col-lg-2 col-form-label">Tiểu
+                                                    sử</label>
+                                                <div class="col-md-5 col-lg-10">
+                                                    <textarea class="form-control" style="height: 100px"
+                                                        th:field="*{notes}"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt--30">
+                                            <div class="mb-3">
+                                                <div id="imagePreview" class="imagePreview mt-3">
+                                                    <img th:if="${user.image}"
+                                                        th:src="@{/user_images/__${user.image}__}" alt="user image">
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <input type="file" class="form-control" id="userImage" name="image"
+                                                        onchange="previewImage(this)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt--30 text-center">
+                                            <button type="submit" class="btn btn-primary btn-lg">Cập nhật thông
+                                                tin</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Change Password -->
+                            <div class="tab-pane fade pt-3" id="change-password" enctype="multipart/form-data">
+                                <form th:action="@{/profile/change-password}" method="post">
+                                    <div class="mb-3">
+                                        <label for="oldPassword" class="form-label">Mật khẩu hiện tại</label>
+                                        <input type="text" class="form-control" id="oldPassword"
+                                            name="oldPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                        <input type="text" class="form-control" id="newPassword" name="newPassword"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                                        <input type="text" class="form-control" id="confirmPassword"
+                                            name="confirmPassword" required>
+                                    </div>
+                                    <div class="mt--30 text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg">Đổi mật khẩu</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Area -->
+        <footer th:replace="user/fragments/footer :: footer"></footer>
+        <!-- //Footer Area -->
+    </div>
+    <!-- //Main wrapper -->
+    <!-- Scripts -->
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" style="max-hight: 300px;">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <!-- JS Files -->
+    <script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/user/popper.min.js}"></script>
+    <script th:src="@{/js/user/bootstrap.min.js}"></script>
+    <script th:src="@{/js/user/plugins.js}"></script>
+    <script th:src="@{/js/user/active.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- Vendor JS Files -->
+    </div>
+</body>
+
+</html>

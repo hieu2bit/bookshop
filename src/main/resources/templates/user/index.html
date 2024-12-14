@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Rook Book Store</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+	<style>
+		.ft__logo a img {
+			max-width: 20%;
+		}
+		.prod {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.product_img {
+			height: 300px;
+			overflow: hidden;
+			display: block;
+		}
+
+		.product_img img {
+			height: 100%;
+			width: auto !important;
+		}
+
+		.title-container {
+			height: 30px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+		<!-- Start Slider area -->
+		<div class="slider-area brown__nav slider--15 slide__activation slide__arrow01 owl-carousel owl-theme">
+			<!-- Start Single Slide -->
+			<div class="slide animation__style10 bg-image--1 fullscreen align__center--left">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="slider__content">
+								<div class="contentbox">
+									<h2>Buy <span>your </span></h2>
+									<h2>favourite <span>Book </span></h2>
+									<h2>from <span>Here </span></h2>
+									<a class="shopbtn" th:href="@{/shop}">Mua ngay</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Single Slide -->
+			<!-- Start Single Slide -->
+			<div class="slide animation__style10 bg-image--2 fullscreen align__center--left">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="slider__content">
+								<div class="contentbox">
+									<h2>Buy <span>your </span></h2>
+									<h2>favourite <span>Book </span></h2>
+									<h2>from <span>Here </span></h2>
+									<a class="shopbtn" th:href="@{/shop}">Mua ngay</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Single Slide -->
+		</div>
+		<!-- End Slider area -->
+		<!-- Start BEst Seller Area -->
+		<section class="wn__product__area brown--color pt--80 pb--30">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section__title text-center">
+							<h2 class="title__be--2">
+								Sách <span class="color--theme">hot</span>
+							</h2>
+						</div>
+					</div>
+				</div>
+				<!-- Start Single Tab Content -->
+				<div class="row single__tab tab-pane fade show active" id="nav-all" role="tabpanel">
+					<div class="product__indicator--4 arrows_style owl-carousel owl-theme">
+						<div th:each="book : ${top4BestSeller}"
+							class="mt--20 p-3 prod product__style--3 col-12">
+							<a class="product_img" th:href="@{/shop/product/__${book.id}__}">
+								<img class="aspect-ratio-box__img img-fluid"
+									th:src="@{/cover_images/__${book.coverImage}__}" alt="product image" />
+							</a>
+							<p class="title-container">
+								<a th:href="@{/shop/product/__${book.id}__}" th:text="${book.title}"></a>
+							</p>
+							<div class="meta d-flex align-items-center">
+								<div class="d-flex align-items-center">
+									<h4
+										th:text="${#numbers.formatDecimal(__${(book.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+									</h4>
+								</div>
+								<span class="text-black-50">/</span>
+								<div class="d-flex align-items-center">
+									<span class="text-black-50 text-decoration-line-through"
+										th:text="${#numbers.formatDecimal(__${(book.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'"></span>
+								</div>
+							</div>
+							<!-- Add to cart button -->
+							<div class="product__hover__info">
+
+								<button href="cart.html" class="btn btn-outline-danger block"
+									th:onclick="'addToCart(' + ${book.id} + ')'" th:text="'Thêm giỏ hàng'"></button>
+
+							</div>
+						</div>
+						<!-- End Single Product -->
+					</div>
+				</div>
+
+				<!-- End Single Tab Content -->
+			</div>
+		</section>
+
+		<!-- Start Best Seller Area -->
+		<section class="wn__bestseller__area bg--white pt--50 pb--30">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section__title text-center">
+							<h2 class="title__be--2">
+								Sách <span class="color--theme">mới</span>
+							</h2>
+						</div>
+					</div>
+				</div>
+				<div class="tab__container">
+					<!-- Start Single Tab Content -->
+					<div class="row single__tab tab-pane fade show active" id="nav-all" role="tabpanel">
+						<div class="product__indicator--4 arrows_style owl-carousel owl-theme">
+							<div th:each="book : ${newProducts}"
+								class="mt--20 p-3 prod product__style--3 col-12">
+								<a class="product_img" th:href="@{/shop/product/__${book.id}__}">
+									<img class="aspect-ratio-box__img img-fluid"
+										th:src="@{/cover_images/__${book.coverImage}__}" alt="product image" />
+								</a>
+								<p class="title-container">
+									<a th:href="@{/shop/product/__${book.id}__}" th:text="${book.title}"></a>
+								</p>
+								<div class="meta d-flex align-items-center">
+									<div class="d-flex align-items-center">
+										<h4
+											th:text="${#numbers.formatDecimal(__${(book.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+										</h4>
+									</div>
+									<span class="text-black-50">/</span>
+									<div class="d-flex align-items-center">
+										<span class="text-black-50 text-decoration-line-through"
+											th:text="${#numbers.formatDecimal(__${(book.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'"></span>
+									</div>
+								</div>
+								<!-- Add to cart button -->
+								<div class="product__hover__info">
+
+									<button href="cart.html" class="btn btn-outline-danger block"
+										th:onclick="'addToCart(' + ${book.id} + ')'" th:text="'Thêm giỏ hàng'"></button>
+
+								</div>
+
+							</div>
+							<!-- End Single Product -->
+						</div>
+					</div>
+					<!-- End Single Tab Content -->
+				</div>
+
+			</div>
+		</section>
+		<script>
+			function addToCart(productId) {
+				var data = JSON.stringify({ "productId": productId, "quantity": 1 });
+
+				$.ajax({
+					type: "POST",
+					url: "/cart/add-to-cart",
+					contentType: "application/json",
+					data: data,
+					success: function (data) {
+						if (data === "ok") {
+							alert("Thêm sản phẩm vào giỏ thành công!");
+
+							updateCartQuantity();
+						} else {
+							alert("Bạn cần đăng nhập trước");
+							window.location.href = "/login";
+						}
+					},
+					error: function () {
+						alert("Error adding item to cart.");
+					}
+				});
+			}
+
+			function updateCartQuantity() {
+				$.ajax({
+					type: "GET",
+					url: "/cart/cart-item-count",  // Replace with the actual endpoint to get cart item count
+					success: function (data) {
+						$("#cart-quantity").text(data); // Update the cart quantity in the header
+					},
+					error: function () {
+						console.log("Error updating cart quantity.");
+					}
+				});
+			}
+		</script>
+		<!-- Footer Area -->
+		<footer th:replace="user/fragments/footer :: footer"></footer>
+		<!-- //Footer Area -->
+	</div>
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+
+</body>
+
+</html>

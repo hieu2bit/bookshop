@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Rook Book Store</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+	<style>
+		/* Reset some default table styles */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			table-layout: fixed;
+		}
+
+		/* Style for the table header row */
+		thead th {
+			text-align: left;
+			background-color: #f2f2f2;
+			padding: 10px;
+			font-weight: bold;
+		}
+
+		/* Style for the table data rows */
+		tbody td {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		/* Style for the product image cell */
+		.product-thumbnail{
+			height: 200px;
+			overflow: hidden;
+			display: block;
+		}
+		.product-thumbnail img{
+			height: 100%;
+			width: auto !important;
+			display: block;
+			margin: 0 auto;
+		}
+
+		/* Center the product name */
+		.product-name {
+			text-align: center;
+		}
+
+		/* Style for product price and subtotal cells */
+		.product-price,
+		.product-subtotal {
+			text-align: center;
+		}
+
+		/* Style for the product quantity cell */
+		.product-quantity {
+			text-align: center;
+		}
+
+		/* Style for the order details header section */
+		.order-details-header {
+			margin-bottom: 20px;
+		}
+
+		/* Style for the order details header section p tags */
+		.order-details-header p {
+			margin: 5px 0;
+		}
+
+		.cancel-order-btn {
+			display: inline-block;
+			margin: 10px auto;
+			padding: 8px 15px;
+			background-color: orange;
+			text-decoration: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		.cancel-order-btn:hover {
+			background-color: #cc0000;
+			color: black;
+		}
+	</style>
+
+	<style>
+		.ft__logo a img {
+			max-width: 20%;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+		<!-- Start Bradcaump area -->
+		<div class="ht__bradcaump__area bg-image--3">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="bradcaump__inner text-center">
+							<h2 class="bradcaump-title">Chi tiết đơn hàng</h2>
+							<nav class="bradcaump-content">
+								<a class="breadcrumb_item" th:href="@{/}">Trang chủ</a>
+								<span class="brd-separetor">/</span>
+								<a class="breadcrumb_item" th:href="@{/orders}">Đơn hàng</a>
+								<span class="brd-separetor">/</span>
+								<span class="breadcrumb_item active">Chi tiết đơn hàng</span>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Bradcaump area -->
+		<!-- order-details-main-area start -->
+		<div class="wishlist-area section-padding--lg bg__white">
+			<div class="container">
+				<div class="wishlist-content">
+					<div class="row">
+						<div class="col-md-6 order-details-header">
+							<p class="mb-4"><strong>ID:</strong> <span th:text="${order.id}"></span></p>
+							<p class="mb-4"><strong>Người nhận:</strong> <span th:text="${order.reciever}"></span></p>
+							<p class="mb-4"><strong>Số điện thoại:</strong> <span th:text="${order.phoneNumber}"></span>
+							</p>
+							<p class="mb-4"><strong>Địa chỉ:</strong> <span th:text="${order.shippingAddress}"></span>
+							</p>
+						</div>
+						<div class="col-md-6 order-details-header">
+							<p class="mb-4"><strong>Thời gian đặt đơn:</strong> <span
+									th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+							<p class="mb-4"><strong>Cập nhập đơn hàng:</strong> <span
+									th:text="${#dates.format(order.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+							<p class="mb-4"><strong>Tổng giá trị:</strong> <span th:text="${order.totalPrice}"></span>
+							</p>
+							<p class="mb-4"><strong>Trạng thái:</strong> <span th:text="${order.status}"></span>
+							</p>
+						</div>
+						<a th:if="${order.getStatus() == 'PENDING' || order.getStatus() == 'PROCESSING'}"
+							th:href="@{/orders/cancel/__${order.id}__}" class="btn btn-danger cancel-order-btn mb-4">Hủy
+							đơn hàng</a>
+						<a th:if="${order.getStatus() == 'DELIVERING'}" th:href="@{/orders/received/__${order.id}__}"
+							class="btn btn-success mb-4">Xác nhận đơn hàng</a>
+					</div>
+					<div class="order-details-table wnro__table table-responsive">
+						<table class="mt-3">
+							<thead>
+								<tr>
+									<th class="product-name">Ảnh bìa</th>
+									<th class="product-name">Tên sách</th>
+									<th class="product-price">Giá</th>
+									<th class="product-quantity">Số lượng</th>
+									<th class="product-subtotal">Tổng</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${ordersDetails}">
+									<td class="product-thumbnail">
+										<img th:src="@{/cover_images/__${item.getBook().coverImage}__}"
+											alt="Product Image" />
+									</td>
+									<td class="product-name" th:text="${item.getBook().title}"></td>
+									<td class="product-price" th:text="${item.price}"></td>
+									<td class="product-quantity" th:text="${item.quantity}">1</td>
+									<td class="product-subtotal" th:text="${item.price * item.quantity}"></td>
+								</tr>
+							</tbody>
+
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- order-details-main-area end -->
+		<!-- Footer Area -->
+		<footer th:replace="user/fragments/footer :: footer"></footer>
+		<!-- //Footer Area -->
+	</div>
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+</body>
+
+</html>

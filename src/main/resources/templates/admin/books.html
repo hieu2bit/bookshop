@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Sản phẩm</title>
+	<meta content="" name="description">
+	<meta content="" name="keywords">
+	<div th:replace="admin/fragments/head :: head"></div>
+</head>
+
+<body>
+	<!-- ======= Header ======= -->
+	<header th:replace="admin/fragments/header :: header">
+	</header>
+	<!-- ======= Sidebar ======= -->
+	<aside id="sidebar" class="sidebar">
+
+		<ul class="sidebar-nav" id="sidebar-nav">
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" th:href="@{/admin}">
+					<i class="bi bi-grid"></i>
+					<span>Tổng quan</span>
+				</a>
+			</li> <!-- End Dashboard Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-people"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="user-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/users_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+				</ul>
+			</li><!-- End Users Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-journal-medical"></i><span>Danh mục</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/categories_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/admin/categories_management/add}">
+							<i class="bi bi-person-plus-fill"></i><span>Thêm mới</span>
+						</a>
+					</li>
+				</ul>
+			</li><!-- End Categorys Nav -->
+
+			<li class="nav-item">
+				<a class="nav-link" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-journal-bookmark"></i><span>Sản phẩm</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="product-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/books_management}" class="active">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/admin/books_management/add}">
+							<i class="bi bi-person-plus-fill"></i><span>Thêm mới</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link collapsed" data-bs-target="#oder-nav" data-bs-toggle="collapse" href="#">
+					<i class="bi bi-basket2"></i><span>Đơn hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+				</a>
+				<ul id="oder-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+					<li>
+						<a th:href="@{/admin/orders_management}">
+							<i class="bi bi-list-ul"></i><span>Danh sách</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link collapsed" th:href="@{/admin/contacts}">
+					<i class="bi bi-chat-left-text"></i>
+					<span>Liên hệ</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link collapsed" th:href="@{/logout}">
+					<i class="bi bi-box-arrow-in-right"></i>
+					<span>Đăng xuất</span>
+				</a>
+			</li>
+		</ul>
+	</aside>
+
+	<!-- ======= Main ======= -->
+	<main id="main" class="main">
+
+		<div class="pagetitle d-flex">
+			<h1>Danh sách sản phẩm</h1>
+			<nav class="ms-auto">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/admin}"><i class="bi bi-house"></i></a></li>
+					<li class="breadcrumb-item active">Sản phẩm</li>
+				</ol>
+			</nav>
+		</div><!-- End Page Title -->
+				
+		<div th:if="${message}" class="alert alert-success" role="alert">
+			<p th:text="${message}"></p>
+		</div>
+
+		<section class="section dashboard">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="row">
+						<!-- Recent Sales -->
+						<div class="col-12">
+							<div class="card recent-sales overflow-auto">
+
+								<div class="card-body">
+									<table class="table table-striped table-bordered table-hover datatable">
+										<thead>
+											<tr>
+												<th scope="col">ID</th>
+												<th scope="col">Tiêu đề</th>
+												<th scope="col">Ảnh bìa</th>
+												<th scope="col">Giá gốc</th>
+												<th scope="col">Giá bán</th>
+												<th scope="col">Số lượng</th>
+												<th scope="col">Đã bán</th>
+												<th scope="col">Hành động</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="book : ${books}">
+												<td th:text="'#'+${book.id}"></td>
+												<td th:text="${book.title}"></td>
+												<td class="text-center"><img th:src="@{/cover_images/__${book.coverImage}__}"
+														style="max-height: 100px;"></td>
+												<td
+													th:text="${#numbers.formatDecimal(__${(book.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</td>
+												<td
+													th:text="${#numbers.formatDecimal(__${(book.salePrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
+												</td>
+												<td th:text="${book.qty}"></td>
+												<td th:text="${book.buyCount}"></td>
+												<td style="width: 12rem">
+													<a th:href="@{/admin/books_management/edit/__${book.id}__}"><button
+															type="button" class="btn btn-outline-info">Chi
+															tiết</button></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div><!-- End Recent Sales -->
+					</div>
+				</div><!-- End Left side columns -->
+			</div>
+		</section>
+	</main>
+
+	<!-- ======= Footer ======= -->
+	<footer th:replace="admin/fragments/footer :: footer"></footer>
+
+	<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+			class="bi bi-arrow-up-short"></i></a>
+
+	<!-- Vendor JS Files -->
+	<script th:src="@{/vendor/apexcharts/apexcharts.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/vendor/chart.js/chart.umd.js}"></script>
+	<script th:src="@{/vendor/echarts/echarts.min.js}"></script>
+	<script th:src="@{/vendor/quill/quill.js}"></script>
+	<script th:src="@{/vendor/simple-datatables/simple-datatables.js}"></script>
+	<script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+	<script th:src="@{/vendor/php-email-form/validate.js}"></script>
+
+	<!-- Template Main JS File -->
+	<script th:src="@{/js/admin/main.js}"></script>
+</body>
+
+</html>

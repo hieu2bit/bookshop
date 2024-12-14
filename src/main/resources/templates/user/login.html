@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Đăng nhập</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<div th:replace="user/fragments/head :: head"></div>
+	<style>
+		.ft__logo a img {
+			max-width: 20%;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header th:replace="user/fragments/header :: header"></header>
+		<!-- //Header -->
+
+		<!-- Start My Account Area -->
+		<section class="my_account_area pt--80 pb--55 bg--white">
+			<div class="container mt--100">
+				<div class="row justify-content-center">
+					<div class="col-lg-6 col-12">
+						<div class="my__account__wrapper">
+							<h3 class="account__title text-center">Đăng nhập</h3>
+							
+							<div th:if="${success}">
+								<div class="alert alert-success" role="alert">
+									<span th:text="${success}"></span>
+								</div>
+							</div>
+
+							<div th:if="${param.error}">
+								<div class="alert alert-danger" role="alert">
+									Đăng nhập thất bại
+								</div>
+							</div>
+
+							<form method="post" th:action="@{/login}">
+								<div class="account__form">
+									<div class="input__box">
+										<label for="text">Email hoặc SDT<span>*</span></label>
+										<input type="text" id="text" name="username" />
+									</div>
+									<div class="input__box">
+										<label for="password">Mật khẩu<span>*</span></label>
+										<input type="password" id="password" name="password" />
+									</div>
+									<div class="form__btn text-center">
+										<button type="submit">Đăng nhập</button>
+									</div>
+									<a class="forget_pass" th:href="@{/register}">Bạn chưa có tài khoản?</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- End My Account Area -->
+		<!-- Footer Area -->
+		<footer th:replace="user/fragments/footer :: footer"></footer>
+
+		<!-- //Footer Area -->
+	</div>
+	<!-- //Main wrapper -->
+	<!-- JS Files -->
+	<script th:src="@{/js/user/vendor/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/user/popper.min.js}"></script>
+	<script th:src="@{/js/user/bootstrap.min.js}"></script>
+	<script th:src="@{/js/user/plugins.js}"></script>
+	<script th:src="@{/js/user/active.js}"></script>
+</body>
+
+</html>
