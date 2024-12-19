@@ -114,7 +114,7 @@
 								<span class="breadcrumb_item active">Chi tiết đơn hàng</span>
 							</nav>
 						</div>
-					</div>
+					</div> 
 				</div>
 			</div>
 		</div>
@@ -134,12 +134,17 @@
 						</div>
 						<div class="col-md-6 order-details-header">
 							<p class="mb-4"><strong>Thời gian đặt đơn:</strong> <span
-									th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+									th:text="${#dates.format(order.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></span></p>
 							<p class="mb-4"><strong>Cập nhập đơn hàng:</strong> <span
-									th:text="${#dates.format(order.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+									th:text="${#dates.format(order.updatedAt, 'dd-MM-yyyy HH:mm:ss')}"></span></p>
 							<p class="mb-4"><strong>Tổng giá trị:</strong> <span th:text="${order.totalPrice}"></span>
 							</p>
-							<p class="mb-4"><strong>Trạng thái:</strong> <span th:text="${order.status}"></span>
+							<p class="mb-4"><strong>Trạng thái:</strong>
+								<span  th:if="${order.status == 'PENDING'}">Đang chờ xử lý</span>
+								<span  th:if="${order.status == 'PROCESSING'}">Đang xử lý</span>
+								<span  th:if="${order.status == 'DELIVERING'}">Đang giao hàng</span>
+								<span  th:if="${order.status == 'DELIVERED'}">Đã giao thành công</span>
+								<span  th:if="${order.status == 'CANCELLED'}">Đã hủy</span>
 							</p>
 						</div>
 						<a th:if="${order.getStatus() == 'PENDING' || order.getStatus() == 'PROCESSING'}"

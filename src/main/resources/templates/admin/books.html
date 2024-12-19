@@ -115,7 +115,7 @@
 				</ol>
 			</nav>
 		</div><!-- End Page Title -->
-				
+
 		<div th:if="${message}" class="alert alert-success" role="alert">
 			<p th:text="${message}"></p>
 		</div>
@@ -132,21 +132,22 @@
 									<table class="table table-striped table-bordered table-hover datatable">
 										<thead>
 											<tr>
-												<th scope="col">ID</th>
-												<th scope="col">Tiêu đề</th>
-												<th scope="col">Ảnh bìa</th>
-												<th scope="col">Giá gốc</th>
-												<th scope="col">Giá bán</th>
-												<th scope="col">Số lượng</th>
-												<th scope="col">Đã bán</th>
-												<th scope="col">Hành động</th>
+												<th class="text-center" >ID</th>
+												<th class="text-center" >Tiêu đề</th>
+												<th class="text-center" >Ảnh bìa</th>
+												<th class="text-center" >Giá gốc</th>
+												<th class="text-center" >Giá bán</th>
+												<th class="text-center" >Số lượng</th>
+												<th class="text-center" >Đã bán</th>
+												<th class="text-center" scope="col">Hành động</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="book : ${books}">
 												<td th:text="'#'+${book.id}"></td>
 												<td th:text="${book.title}"></td>
-												<td class="text-center"><img th:src="@{/cover_images/__${book.coverImage}__}"
+												<td class="text-center"><img
+														th:src="@{/cover_images/__${book.coverImage}__}"
 														style="max-height: 100px;"></td>
 												<td
 													th:text="${#numbers.formatDecimal(__${(book.originalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
@@ -156,10 +157,12 @@
 												</td>
 												<td th:text="${book.qty}"></td>
 												<td th:text="${book.buyCount}"></td>
-												<td style="width: 12rem">
+												<td class="text-center" style="width: 9rem">
 													<a th:href="@{/admin/books_management/edit/__${book.id}__}"><button
-															type="button" class="btn btn-outline-info">Chi
+															type="button" class="btn btn-outline-info btn-sm">Chi
 															tiết</button></a>
+													<button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+														th:onclick="'deleteBook('+ *{id} +')'">Xóa</button>
 												</td>
 											</tr>
 										</tbody>
@@ -171,6 +174,13 @@
 				</div><!-- End Left side columns -->
 			</div>
 		</section>
+		<script>
+			function deleteBook(bookId) {
+				if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
+					window.location.href = "/admin/users_management/delete/" + bookId;
+				}
+			}
+		</script>
 	</main>
 
 	<!-- ======= Footer ======= -->

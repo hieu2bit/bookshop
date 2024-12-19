@@ -94,8 +94,6 @@ public class BookServiceImpl implements BookService {
         Long categoryId = search.getCategoryId();
         String keyword = search.getKeyword();
 
-        // Lấy dữ liệu phân trang dựa trên categoryId, keyword và các điều kiện tìm kiếm
-        // khác (nếu có)
         if (categoryId != null && keyword != null) {
             return bookRepository.findByCategory_IdAndTitleContaining(categoryId, keyword, pageable);
         } else if (categoryId != null) {

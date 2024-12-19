@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface UserService {
     Page<User> getAllUserOrderByCreatedDate(Pageable pageable);
+    Page<User> getAllUserOrderByRoles(String roles,Pageable pageable);
 
     User getUserById(Long userId);
 

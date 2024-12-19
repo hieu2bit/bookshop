@@ -10,39 +10,32 @@ import com.group7.bookshopwebsite.entity.Order;
 import com.group7.bookshopwebsite.entity.OrderDetail;
 import com.group7.bookshopwebsite.entity.User;
 import com.group7.bookshopwebsite.repository.BookRepository;
+import com.group7.bookshopwebsite.repository.OrderDetailRepository;
 import com.group7.bookshopwebsite.repository.OrderRepository;
 
 import com.group7.bookshopwebsite.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @AllArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
     private BookRepository bookRepository;
     private OrderRepository orderRepository;
-
-    @Override
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public List<Order> getAllOrders(Sort sort) {
-        return orderRepository.findAll(sort);
-    }
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
     public Page<Order> getAllOrdersOnPage(Pageable pageable) {
@@ -118,6 +111,8 @@ public class OrderServiceImpl implements OrderService {
             assert book != null;
             orderDetail.setPrice(book.getSalePrice());
             order.addOrderDetail(orderDetail);
+            book.setBuyCount(book.getBuyCount() + cartItem.getQuantity());
+            book.setQty(book.getQty() - cartItem.getQuantity());
         }
 
         order.setUser(user);
@@ -138,6 +133,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancelOrder(Order order) {
         order.setStatus(OrderStatus.CANCELLED);
+        List<OrderDetail> oDetails = orderDetailRepository.findByOrder(order);
+        for (OrderDetail orderDetail : oDetails) {
+            Book book = orderDetail.getBook();
+            book.setBuyCount(book.getBuyCount() - orderDetail.getQuantity());
+            book.setQty(book.getQty() + orderDetail.getQuantity());
+        }
         orderRepository.save(order);
     }
 
@@ -147,30 +148,53 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllOrderStatistics() {
-        List<Object[]> stats = orderRepository.findAllOrdersGroupedByDate();
-        List<Map<String, Object>> result = new ArrayList<>();
+    public Map<String, Object> getOrdersStatsLast7Days() {
+        LocalDate now = LocalDate.now();
+        List<LocalDate> last7Days = IntStream.rangeClosed(0, 6)
+        .mapToObj(i -> now.minusDays(6 - i))
+        .collect(Collectors.toList());
 
-        for (Object[] stat : stats) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("date", stat[0]); // Ngày
-            map.put("totalOrders", ((Number) stat[1]).longValue()); // Tổng số đơn hàng
-            result.add(map);
+        List<Order> orders = orderRepository.findByCreatedAtBetween(
+                Date.from(now.minusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(now.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        Map<LocalDate, Long> orderCounts = orders.stream()
+                .collect(Collectors.groupingBy(
+                        o -> o.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.counting()));
+
+        Map<LocalDate, Long> successOrderCounts = orders.stream()
+                .filter(o -> "DELIVERED".equals(o.getStatus()))
+                .collect(Collectors.groupingBy(
+                        o -> o.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.counting()));
+
+        Map<LocalDate, BigDecimal> revenues = orders.stream()
+                .filter(o -> "DELIVERED".equals(o.getStatus()))
+                .collect(Collectors.groupingBy(
+                        o -> o.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.mapping(
+                                Order::getTotalPrice,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::valueOf, BigDecimal::add))));
+
+        List<String> dates = new ArrayList<>();
+        List<Long> totalOrders = new ArrayList<>();
+        List<Long> successfulOrders = new ArrayList<>();
+        List<BigDecimal> totalRevenues = new ArrayList<>();
+
+        for (LocalDate date : last7Days) {
+            dates.add(date.toString());
+            totalOrders.add(orderCounts.getOrDefault(date, 0L));
+            successfulOrders.add(successOrderCounts.getOrDefault(date, 0L));
+            totalRevenues.add(revenues.getOrDefault(date, BigDecimal.ZERO));
         }
-        return result;
-    }
 
-    @Override
-    public List<Map<String, Object>> getDeliveredOrderRevenues() {
-        List<Object[]> stats = orderRepository.findDeliveredOrderRevenuesGroupedByDate();
-        List<Map<String, Object>> result = new ArrayList<>();
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("dates", dates);
+        stats.put("totalOrders", totalOrders);
+        stats.put("successfulOrders", successfulOrders);
+        stats.put("totalRevenues", totalRevenues);
 
-        for (Object[] stat : stats) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("date", stat[0]); // Ngày
-            map.put("totalRevenue", ((Number) stat[1]).doubleValue()); // Tổng doanh thu
-            result.add(map);
-        }
-        return result;
+        return stats;
     }
 }

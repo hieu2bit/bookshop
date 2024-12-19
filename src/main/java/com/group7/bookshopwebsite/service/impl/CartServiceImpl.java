@@ -17,17 +17,14 @@ public class CartServiceImpl implements CartService {
         CartDTO cart = getCart(session);
         List<CartItemDTO> cartItems = cart.getCartItems();
 
-        // Kiểm tra xem mục đã tồn tại trong giỏ hàng chưa
         Optional<CartItemDTO> existingCartItem = cartItems.stream()
                 .filter(item -> item.getBookId().equals(cartItem.getBookId()))
                 .findFirst();
 
         if (existingCartItem.isPresent()) {
-            // Cập nhật số lượng nếu mục đã tồn tại
             CartItemDTO existingItem = existingCartItem.get();
             existingItem.setQuantity(existingItem.getQuantity() + cartItem.getQuantity());
         } else {
-            // Thêm mới mục vào giỏ hàng
             cartItems.add(cartItem);
         }
 
@@ -40,7 +37,6 @@ public class CartServiceImpl implements CartService {
         CartDTO cart = getCart(session);
         List<CartItemDTO> cartItems = cart.getCartItems();
 
-        // Tìm mục cần cập nhật
         Optional<CartItemDTO> cartItemToUpdate = cartItems.stream()
                 .filter(item -> item.getBookId().equals(productId))
                 .findFirst();

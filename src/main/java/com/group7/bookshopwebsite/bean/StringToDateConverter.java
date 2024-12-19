@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Component
 public class StringToDateConverter implements Converter<String, Date> {
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
 
     @Override
     public Date convert(String source) {

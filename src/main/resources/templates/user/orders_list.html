@@ -122,7 +122,7 @@
 											<tr th:each="order : ${orders}">
 												<td class="order-id" th:text="'#' + ${order.id}"></td>
 												<td class="order-date"
-													th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">
+													th:text="${#dates.format(order.createdAt, 'dd-MM-yyyy HH:mm:ss')}">
 												</td>
 
 												<td class="order-amount"

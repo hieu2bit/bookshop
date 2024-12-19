@@ -36,6 +36,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> getAllUserOrderByRoles(String roles, Pageable pageable) {
+        Role role = roleRepository.findByName(roles);
+        return userRepository.findByRoles(role, pageable);
+    }
+
+    @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> 
             new RuntimeException("User with ID " + userId + " not found"));
@@ -51,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if (image != null && !image.isEmpty()) {
             saveUserImage(user, image);
         }
-        userRepository.save(user); // Lưu thông tin đã cập nhật
+        userRepository.save(user);
     }
     
     

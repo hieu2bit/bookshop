@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@IdClass(OrderDetailId.class) // Thêm định nghĩa IdClass
+@IdClass(OrderDetailId.class)
 @Table(name = "order_details")
 public class OrderDetail implements Serializable {
 

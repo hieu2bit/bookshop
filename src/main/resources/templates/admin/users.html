@@ -133,25 +133,27 @@
 							<div class="card recent-sales overflow-auto">
 
 								<div class="card-body">
-									
+
 									<form th:action="@{/admin/users_management}" method="get" id="filterForm">
 										<select name="roles" id="rolesDropdown" class="form-select m-2">
 											<option value="" th:selected="${selectedRoles == null}">Vai trò</option>
-											<option value="ROLE_ADMIN" th:selected="${selectedRoles == 'ROLE_ADMIN'}">Quản trị viên</option>
-											<option value="ROLE_USER" th:selected="${selectedRoles == 'ROLE_USER'}">Người dùng</option>
+											<option value="ROLE_ADMIN" th:selected="${selectedRoles == 'ROLE_ADMIN'}">
+												Quản trị viên</option>
+											<option value="ROLE_USER" th:selected="${selectedRoles == 'ROLE_USER'}">
+												Người dùng</option>
 										</select>
 									</form>
 
 									<table class="table table-striped table-bordered table-hover datatable">
 										<thead>
 											<tr>
-												<th scope="col">#ID</th>
-												<th scope="col">Họ tên</th>
-												<th scope="col">Giới tính</th>
-												<th scope="col">Số điện thoại</th>
-												<th scope="col">Địa chỉ</th>
-												<th scope="col">Vai trò</th>
-												<th scope="col">Hành động</th>
+												<th class="text-center">#ID</th>
+												<th class="text-center">Họ tên</th>
+												<th class="text-center">Giới tính</th>
+												<th class="text-center">Số điện thoại</th>
+												<th class="text-center">Địa chỉ</th>
+												<th class="text-center">Vai trò</th>
+												<th class="text-center">Hành động</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -161,28 +163,38 @@
 												<td th:text="${user.gender}"></td>
 												<td th:text="${user.phoneNumber}"></td>
 												<td th:text="${user.address}"></td>
-												<td th:each="role : ${user.getRoles()}">
-													<span th:if="${role.name == 'ROLE_ADMIN'}"
-														class="badge bg-primary">Quản trị viên</span>
-													<span th:if="${role.name == 'ROLE_USER'}"
-														class="badge bg-secondary">Người dùng</span>
-												</td>
-												<td style="width: 12rem">
-													<a th:href="@{'/admin/users_management/edit/' + ${user.id}}"><button
-															type="button" class="btn btn-outline-info">Chi
-															tiết</button></a>
-												</td>
+												<div th:each="role : ${user.getRoles()}">
+													<td>
+														<span th:if="${role.name == 'ROLE_ADMIN'}"
+															class="badge bg-primary">Quản trị viên</span>
+														<span th:if="${role.name == 'ROLE_USER'}"
+															class="badge bg-secondary">Người dùng</span>
+													</td>
+													<td class="text-center" style="width: 9rem">
+														<a th:href="@{'/admin/users_management/edit/' + ${user.id}}">
+															<button type="button" class="btn btn-outline-info btn-sm">Chi
+																tiết</button>
+														</a>
+														<button th:if="${role.name == 'ROLE_USER'}" type="button"
+															class="btn btn-danger btn-sm" data-toggle="modal"
+															th:onclick="'deleteUser('+ *{user.id} +')'">Xóa</button>
+													</td>
+												</div>
+
 											</tr>
 										</tbody>
 									</table>
 								</div>
-								
 								<script>
 									document.getElementById('rolesDropdown').addEventListener('change', function () {
 										document.getElementById('filterForm').submit()
 									});
+									function deleteUser(UserId) {
+										if (confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')) {
+											window.location.href = "/admin/users_management/delete/" + UserId;
+										}
+									}
 								</script>
-
 							</div>
 						</div><!-- End Recent Sales -->
 					</div>

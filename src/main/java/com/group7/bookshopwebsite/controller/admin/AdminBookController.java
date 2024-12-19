@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,8 +32,10 @@ public class AdminBookController extends BaseController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public String showBooksPage(Model model) {
-        List<Book> books = bookService.findAllOrderByCreatedDate();
+    public String showBooksPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
+        int pageSize = 100;
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("createdAt").descending());
+        Page<Book> books = bookService.getAllBooksForUsers(pageable);
         List<Category> categories = categoryService.getAllCategories();
 
         model.addAttribute("books", books);
@@ -55,7 +61,6 @@ public class AdminBookController extends BaseController {
             RedirectAttributes redirectAttributes
     ) throws IOException {
     
-        // Xử lý lỗi validation
         if (bindingResult.hasErrors()) {
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
@@ -63,41 +68,30 @@ public class AdminBookController extends BaseController {
             return "admin/books_add";
         }
     
-        // Trường hợp chỉnh sửa sách
         if (book.getId() != null) {
             Book existingBook = bookService.getBookById(book.getId());
             if (existingBook != null) {
-                // Nếu không cập nhật ảnh mới, giữ lại ảnh cũ
                 if (coverImage.isEmpty()) {
                     book.setCoverImage(existingBook.getCoverImage());
                 }
-                // Cập nhật thông tin sách
                 bookService.editBook(book, coverImage);
-    
-                // Lấy lại thông tin sách sau khi cập nhật
                 Book editedBook = bookService.getBookById(book.getId());
                 model.addAttribute("book", editedBook);
                 redirectAttributes.addFlashAttribute("message", "Sửa thông tin sách thành công!");
             }
         }
-        // Trường hợp thêm mới sách
         else {
             Book exist = bookService.getBookByName(book.getTitle());
             if (exist != null) {
                 model.addAttribute("error", "Đã tồn tại sách với tên này");
                 return "admin/books_add";
             } else {
-                // Thêm sách mới
                 bookService.addBook(book, coverImage);
-    
-                // Lấy lại sách mới từ cơ sở dữ liệu (nếu cần ID)
                 Book savedBook = bookService.getBookByName(book.getTitle());
                 redirectAttributes.addFlashAttribute("message", "Thêm sách thành công!");
                 return "redirect:/admin/books_management/edit/" + savedBook.getId();
             }
         }
-    
-        // Điều hướng về trang chi tiết sách
         return "redirect:/admin/books_management/edit/" + book.getId();
     }
  
@@ -114,8 +108,6 @@ public class AdminBookController extends BaseController {
     @GetMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         bookService.deleteBook(id);
-
-        // Add a success message to the model
         redirectAttributes.addFlashAttribute("message", "Xoá sách thành công!");
 
         return "redirect:/admin/books_management";

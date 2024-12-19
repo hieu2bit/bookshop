@@ -148,8 +148,10 @@
                             <div class="row mb-3">
                                 <label for="userRole" class="col-sm-2 col-form-label">Role</label>
                                 <div class="col-sm-10" th:each="role : ${user.getRoles()}">
-                                    <input th:if="${role.name == 'ROLE_ADMIN'}" id="userRole" required type="text" class="form-control" value="Quản trị viên" readonly />
-                                    <input th:if="${role.name == 'ROLE_USER'}" id="userRole" required type="text" class="form-control" value="Người dùng" readonly />
+                                    <input th:if="${role.name == 'ROLE_ADMIN'}" id="userRole" required type="text"
+                                        class="form-control" value="Quản trị viên" readonly />
+                                    <input th:if="${role.name == 'ROLE_USER'}" id="userRole" required type="text"
+                                        class="form-control" value="Người dùng" readonly />
                                 </div>
                             </div>
 
@@ -196,8 +198,8 @@
                             <div class="row mb-3">
                                 <label for="userNotes" class="col-sm-2 col-form-label">Tiểu sử</label>
                                 <div class="col-sm-10">
-                                    <textarea id="userNotes" type="text" class="form-control"
-                                        th:field="*{notes}" readonly></textarea>
+                                    <textarea id="userNotes" type="text" class="form-control" th:field="*{notes}"
+                                        readonly></textarea>
                                 </div>
                             </div>
 
@@ -230,6 +232,11 @@
                             <div class="text-center">
                                 <button type="button" onclick="window.history.back()" class="btn btn-secondary">Quay
                                     lại</button>
+                                <a th:each="role : ${user.getRoles()}">
+                                    <button th:if="${role.name == 'ROLE_USER'}" type="button"
+                                    class="btn btn-danger" data-toggle="modal"
+                                    th:onclick="'deleteUser('+ *{id} +')'">Xóa</button>
+                                </a>
                             </div>
                         </form>
                         <script>

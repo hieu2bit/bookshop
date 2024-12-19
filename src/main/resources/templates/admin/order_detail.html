@@ -140,7 +140,7 @@
 											<p class="mb-1"><strong>Email:</strong> <span
 													th:text="${order.emailAddress}"></span></p>
 											<p class="mb-1"><strong>Thời gian tạo:</strong> <span
-													th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+													th:text="${#dates.format(order.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></span>
 											</p>
 										</div>
 										<div class="col-md-6">
@@ -159,7 +159,7 @@
 											<p class="mb-1"><strong>Địa chỉ giao hàng:</strong> <span
 													th:text="${order.shippingAddress}"></span></p>
 											<p class="mb-1"><strong>Thời cập nhập:</strong> <span
-													th:text="${#dates.format(order.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+													th:text="${#dates.format(order.updatedAt, 'dd-MM-yyyy HH:mm:ss')}"></span>
 											</p>
 										</div>
 									</div>

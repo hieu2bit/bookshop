@@ -6,15 +6,12 @@ import com.group7.bookshopwebsite.entity.Order;
 import com.group7.bookshopwebsite.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
-    List<Order> getAllOrders();
-    List<Order> getAllOrders(Sort sort);
 
     List<Order> getAllOrdersByUser(User user);
     Order getOrderById(Long orderId);
@@ -38,9 +35,8 @@ public interface OrderService {
     void setDeliveredOrder(Order order);
 
     void setReceivedToOrder(Order order);
-
-    public List<Map<String, Object>> getAllOrderStatistics();
-    public List<Map<String, Object>> getDeliveredOrderRevenues();
+    
+    public Map<String, Object> getOrdersStatsLast7Days();
 
     List<Order> getTop10orders();
 

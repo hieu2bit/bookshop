@@ -6,6 +6,10 @@ import com.group7.bookshopwebsite.entity.OrderDetail;
 import com.group7.bookshopwebsite.service.OrderDetailService;
 import com.group7.bookshopwebsite.service.OrderService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,17 +29,20 @@ public class AdminOrderController extends BaseController {
     private OrderDetailService orderDetailService;
 
     @GetMapping
-    public String getAllOrders(@RequestParam(value = "status", required = false) String status, Model model) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        List<Order> orders = orderService.getAllOrders(sort);
-    
+    public String getAllOrders(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "status", required = false) String status,
+            Model model) {
+
+        int pageSize = 100;
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("createdAt").descending());
+
+        Page<Order> orderPage = orderService.getAllOrdersOnPage(pageable);;
         if (status != null && !status.isEmpty()) {
-            orders = orders.stream()
-                    .filter(order -> status.equals(order.getStatus()))
-                    .toList();
+            orderPage = orderService.getOrdersByStatus(status, pageable);
         }
-    
-        model.addAttribute("orders", orders);
+
+        model.addAttribute("orders", orderPage);
         model.addAttribute("selectedStatus", status);
         return "admin/orders";
     }

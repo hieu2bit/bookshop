@@ -228,10 +228,11 @@
 									<h5 class="card-title">Thống kê</h5>
 									<div id="reportsChart"></div>
 									<script th:inline="javascript">
-										let dates = /*[[${dates}]]*/[];
-										let totalOrders = /*[[${totalOrders}]]*/[];
-										let totalRevenues = /*[[${totalRevenues}]]*/[];
-
+										let dates = /*[[${dates}]]*/ [];
+										let totalOrders = /*[[${totalOrders}]]*/ [];
+										let totalRevenues = /*[[${totalRevenues}]]*/ [];
+										let successfulOrders = /*[[${successfulOrders}]]*/ [];
+									
 										document.addEventListener("DOMContentLoaded", () => {
 											new ApexCharts(document.querySelector("#reportsChart"), {
 												series: [
@@ -241,8 +242,13 @@
 														type: 'line'
 													},
 													{
-														name: 'Số đơn hàng',
+														name: 'Tổng số đơn hàng',
 														data: totalOrders,
+														type: 'bar'
+													},
+													{
+														name: 'Số đơn hàng thành công',
+														data: successfulOrders,
 														type: 'bar'
 													}
 												],
@@ -252,16 +258,16 @@
 													stacked: false
 												},
 												stroke: {
-													width: [5, 0],
+													width: [5, 0, 0],
 													curve: 'smooth'
 												},
 												plotOptions: {
 													bar: {
-														columnWidth: '20%'
+														columnWidth: '40%'
 													}
 												},
 												xaxis: {
-													categories: dates,
+													categories: dates
 												},
 												yaxis: [
 													{
@@ -302,10 +308,15 @@
 															formatter: function (val) {
 																return val + " đơn";
 															}
+														},
+														{
+															formatter: function (val) {
+																return val + " đơn";
+															}
 														}
 													]
 												},
-												colors: ['#008FFB', '#FEB019'],
+												colors: ['#008FFB', '#FEB019', '#00E396'],
 												legend: {
 													position: 'top',
 													horizontalAlign: 'left'
@@ -313,6 +324,7 @@
 											}).render();
 										});
 									</script>
+									
 									<!-- End Line Chart -->
 								</div>
 							</div>
@@ -327,19 +339,19 @@
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th scope="col">#ID</th>
-												<th scope="col">Khách hàng</th>
-												<th scope="col">Ngày tạo</th>
-												<th scope="col">Giá trị</th>
-												<th scope="col">Trạng thái</th>
-												<th scope="col">Hành động</th>
+												<th class="text-center" >#ID</th>
+												<th class="text-center" >Khách hàng</th>
+												<th class="text-center" >Ngày tạo</th>
+												<th class="text-center" >Giá trị</th>
+												<th class="text-center" >Trạng thái</th>
+												<th class="text-center" >Hành động</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="order : ${orders}">
 												<td th:text="'#'+${order.id}"></td>
 												<td th:text="${order.reciever}"></td>
-												<td th:text="${#dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">
+												<td th:text="${#dates.format(order.createdAt, 'dd-MM-yyyy HH:mm:ss')}">
 												</td>
 												<td
 													th:text="${#numbers.formatDecimal(__${(order.totalPrice)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
@@ -359,9 +371,9 @@
 												<td th:if="${order.status == 'CANCELLED'}">
 													<span class="badge bg-secondary">Đã hủy</span>
 												</td>
-												<td style="width: 12rem">
+												<td class="text-center" style="width: 9rem">
 													<a th:href="@{/admin/orders_management/details/__${order.id}__}"><button
-															type="button" class="btn btn-outline-info">Chi
+															type="button" class="btn btn-outline-info btn-sm">Chi
 															tiết</button></a>
 												</td>
 											</tr>
@@ -382,13 +394,13 @@
 									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
-												<th scope="col">#ID</th>
-												<th scope="col">Ảnh bìa</th>
-												<th scope="col">Tên sách</th>
-												<th scope="col">Giá bán</th>
-												<th scope="col">Đã bán</th>
-												<th scope="col">Doanh thu</th>
-												<th scope="col">Hành động</th>
+												<th class="text-center" >#ID</th>
+												<th class="text-center" >Ảnh bìa</th>
+												<th class="text-center" >Tên sách</th>
+												<th class="text-center" >Giá bán</th>
+												<th class="text-center" >Đã bán</th>
+												<th class="text-center" >Doanh thu</th>
+												<th class="text-center" >Hành động</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -405,9 +417,9 @@
 												<td
 													th:text="${#numbers.formatDecimal(__${(book.salePrice)*(book.buyCount)}__, 0, 'POINT', 0, 'POINT')} + ' VND'">
 												</td>
-												<td style="width: 12rem">
+												<td class="text-center" style="width: 9rem">
 													<a th:href="@{/admin/books_management/edit/__${book.id}__}"><button
-															type="button" class="btn btn-outline-info">Chi
+															type="button" class="btn btn-outline-info btn-sm">Chi
 															tiết</button></a>
 												</td>
 											</tr>

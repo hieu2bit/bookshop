@@ -6,6 +6,11 @@ import com.group7.bookshopwebsite.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,29 +19,28 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Controller
 @RequestMapping("admin/users_management")
-public class AdminUserController extends BaseController{
+public class AdminUserController extends BaseController {
 
     private final UserService userService;
 
     @GetMapping
-    public String getUsersPage(@RequestParam(value = "roles", required = false) String roles, Model model) {
-        List<User> users = userService.getAllUsers();
+    public String getUsersPage(@RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(value = "roles", required = false) String roles,
+            Model model) {
+        int pageSize = 100;
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("createdAt").descending());
+        Page<User> usersPage = userService.getAllUserOrderByCreatedDate(pageable);
 
         if (roles != null && !roles.isEmpty()) {
-            users = users.stream()
-                    .filter(user -> user.getRoles().stream()
-                            .anyMatch(role -> role.getName().equals(roles))) // Kiểm tra role.name
-                    .collect(Collectors.toList());
+            usersPage = userService.getAllUserOrderByRoles(roles, pageable);
             model.addAttribute("selectedRoles", roles);
         }
 
-        model.addAttribute("users", users);
+        model.addAttribute("users", usersPage);
         return "admin/users";
     }
 
@@ -48,7 +52,6 @@ public class AdminUserController extends BaseController{
             Model model,
             RedirectAttributes redirectAttributes) throws IOException {
 
-        // Kiểm tra lỗi đầu vào (nếu có)
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Thông tin không hợp lệ!");
             return "/admin/user_update";
@@ -61,12 +64,10 @@ public class AdminUserController extends BaseController{
                 return "redirect:/admin/users_management";
             }
 
-            // Xử lý ảnh (nếu có)
             if (image.isEmpty()) {
-                user.setImage(existingUser.getImage()); // Giữ ảnh cũ nếu không có ảnh mới
+                user.setImage(existingUser.getImage());
             }
 
-            // Cập nhật thông tin người dùng
             userService.updateUser(user, image);
             redirectAttributes.addFlashAttribute("message", "Sửa thông tin thành công!");
         } else {
